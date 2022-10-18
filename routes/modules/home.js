@@ -29,10 +29,16 @@ router.post('/', (req, res) => {
       return res.render('index', { newURL, shortenedURL: shortenedURL ? shortenedURL : url.shortenedURL })
     })
     .catch(error => console.log(error))
-
 })
 
-
+// 將短網址導回原網址
+router.get('/:shortURL', (req, res) => {
+  const shortURL = req.params.shortURL
+  URL.findOne({ shortenedURL: shortURL })
+    .lean()
+    .then(url => res.redirect(url.originalURL))
+    .catch(error => console.log(error))
+})
 
 
 module.exports = router
