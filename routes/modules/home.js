@@ -37,7 +37,7 @@ router.get('/:shortURL', (req, res) => {
   URL.findOne({ shortenedURL: shortURL })
     .lean()
     .then(url => res.redirect(url.originalURL))
-    .catch(error => console.log(error))
+    .catch(error => res.render('error'))
 })
 
 
