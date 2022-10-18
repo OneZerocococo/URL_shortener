@@ -1,11 +1,11 @@
-# 短網址產生器功能簡介 - Introduction
+# 短網址產生器功能簡介
 
 將網址縮短的短網址產生器
 
 ![image](https://github.com/OneZerocococo/URL_shortener/blob/main/public/img/index.PNG)
 ![image](https://github.com/OneZerocococo/URL_shortener/blob/main/public/img/shortened.PNG)
 
-## 功能列表 - Features
+## 功能列表
 
 - 可輸入網址轉換成短網址
 - 可點擊 copy 複製短網址連結
@@ -35,7 +35,7 @@
 6. 若看見此行訊息則代表順利運行，打開瀏覽器進入到以下網址
 
    ```bash
-   Express is listening on localhost:3000
+   App is running on http://localhost:3000
    ```
 
 7. 若欲暫停使用
