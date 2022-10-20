@@ -11,22 +11,28 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   const newURL = req.body.originalURL
-  let shortenedURL = ""
   let emptyURL = !newURL
   // 沒輸入網址會有提示
   if (emptyURL) {
     return res.render('index', { emptyURL })
   }
-  // 判斷originalURL是否已經存在於資料庫
-  return URL.findOne({ originalURL: newURL })
-    .lean()
-    .then(url => {
-      if (!url) {
-        shortenedURL = generateShortenedURL()
-        URL.create({ originalURL: newURL, shortenedURL: shortenedURL })
+
+  URL.find()
+    .then(urls => {
+      // 判斷newURL是否已經存在於資料庫
+      const existURL = urls.find(url => url.originalURL === newURL)
+      if (existURL) {
+        return existURL
       }
-      // 尚未存在於資料庫就於資料庫創建一個網址和縮網址
-      return res.render('index', { newURL, shortenedURL: shortenedURL ? shortenedURL : url.shortenedURL })
+      let shortenURL = generateShortenedURL()
+      // 若產生的短網址已存在於資料庫就重新產生，避免重複
+      while (urls.some(url => url.shortenedURL === shortenURL)) {
+        shortenURL = generateShortenedURL()
+      }
+      return URL.create({ originalURL: newURL, shortenedURL: shortenURL })
+    })
+    .then(url => {
+      return res.render('index', { newURL: url.originalURL, shortenURL: url.shortenedURL })
     })
     .catch(error => console.log(error))
 })
