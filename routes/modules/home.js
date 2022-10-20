@@ -16,19 +16,16 @@ router.post('/', (req, res) => {
   if (emptyURL) {
     return res.render('index', { emptyURL })
   }
-
-  URL.find()
-    .then(urls => {
-      // 判斷newURL是否已經存在於資料庫
-      const existURL = urls.find(url => url.originalURL === newURL)
-      if (existURL) {
-        return existURL
+  URL.findOne({ originalURL: newURL })
+    .then(url => {
+      if (url) {
+        return url
       }
-      let shortenURL = generateShortenedURL()
       // 若產生的短網址已存在於資料庫就重新產生，避免重複
-      while (urls.some(url => url.shortenedURL === shortenURL)) {
-        shortenURL = generateShortenedURL()
-      }
+      let shortenURL = generateShortenedURL()
+      URL.findOne({ shortenedURL: shortenURL })
+        .then(existshortURL =>
+          existshortURL ? shortenURL = generateShortenedURL() : existshortURL)
       return URL.create({ originalURL: newURL, shortenedURL: shortenURL })
     })
     .then(url => {
